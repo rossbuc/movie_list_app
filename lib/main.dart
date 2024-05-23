@@ -1,28 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
 
-void main() {
-  fetchData();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await fetchData();
   runApp(const MyApp());
 }
 
-void fetchData() async {
-  final url = Uri.parse(
-      'https://movie-database-alternative.p.rapidapi.com/?s=Avengers%20Endgame');
-  print(url);
-  final response = await http.get(url, headers: {
-    'X-RapidAPI-Key': 'baa216fbefmsh1eb2e559e9272a7p13e0a8jsnf9079f31be9f',
-    'X-RapidAPI-Host': 'movie-database-alternative.p.rapidapi.com'
-  });
+Future<Map<String, dynamic>> fetchData() async {
+  const apiKeyUrl = String.fromEnvironment('API_KEY');
+  print(apiKeyUrl);
+  final url = Uri.parse(apiKeyUrl);
+  print('Requesting data from: $url');
+  try {
+    final response = await http.get(url);
 
-  if (response.statusCode == 200) {
-    var data = jsonDecode(response.body);
-    print(data);
-  } else {
-    print("error in loading data, status code: ${response.statusCode}");
-    throw Exception("Failed to load data");
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      print(data);
+      return data;
+    } else {
+      print("Error in loading data, status code: ${response.statusCode}");
+      throw Exception("Failed to load data");
+    }
+  } catch (e) {
+    print("An error occurred: $e");
+    if (e is SocketException) {
+      print('SocketException: No internet connection or URL is not accessible');
+    } else {
+      print('Unexpected error: $e');
+    }
+    throw Exception("Failed to load data ");
   }
+}
+
+void displaySideBar() {
+  print("Display sidebar called");
 }
 
 class MyApp extends StatelessWidget {
@@ -47,6 +62,19 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {
+            displaySideBar();
+          },
+        ),
+        title: Text(widget.title),
+      ),
+      body: const Center(
+        child: Text('Welcome to Movie Lister!'),
+      ),
+    );
   }
 }
