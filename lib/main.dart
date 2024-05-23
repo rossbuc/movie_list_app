@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io';
 
-void main() async {
+Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');
   await fetchData();
   runApp(const MyApp());
 }
 
 Future<Map<String, dynamic>> fetchData() async {
-  const apiKeyUrl = String.fromEnvironment('API_KEY');
+  var apiKeyUrl = dotenv.env['API_KEY_URL'];
   print(apiKeyUrl);
-  final url = Uri.parse(apiKeyUrl);
+  final url = Uri.parse(apiKeyUrl!);
   print('Requesting data from: $url');
   try {
     final response = await http.get(url);
