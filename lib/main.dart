@@ -1,44 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:io';
+import 'package:movie_list_app/data_model.dart';
+import 'package:provider/provider.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
-  await fetchData();
-  runApp(const MyApp());
-}
-
-Future<Map<String, dynamic>> fetchData() async {
-  // var apiKeyUrl = dotenv.env['API_KEY_URL'];
-  final authToken = dotenv.env['AUTH_TOKEN'];
-  final url = Uri.https('api.themoviedb.org', '/3/discover/movie',
-      {'sort_by': 'popularity.desc'});
-  print('Requesting data from: $url');
-  print("And using this auth token for the request, ${authToken}");
-  try {
-    final response =
-        await http.get(url, headers: {'Authorization': 'Bearer ${authToken}'});
-
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      print(data);
-      return data;
-    } else {
-      print("Error in loading data, status code: ${response.statusCode}");
-      throw Exception("Failed to load data");
-    }
-  } catch (e) {
-    print("An error occurred: $e");
-    if (e is SocketException) {
-      print('SocketException: No internet connection or URL is not accessible');
-    } else {
-      print('Unexpected error: $e');
-    }
-    throw Exception("Failed to load data ");
-  }
+  // await fetchData();
+  runApp(ChangeNotifierProvider(
+    create: (context) => DataModel(),
+    child: const MyApp(),
+  ));
 }
 
 void displaySideBar() {
@@ -67,19 +39,23 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {
-            displaySideBar();
-          },
-        ),
-        title: Text(widget.title),
-      ),
-      body: const Center(
-        child: Text('Welcome to Movie Lister!'),
-      ),
-    );
+    return Consumer<DataModel>(
+        builder: (context, value, child) => Scaffold(
+              appBar: AppBar(
+                leading: IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: () {
+                    displaySideBar();
+                  },
+                ),
+                title: Text(widget.title),
+              ),
+              body: const Center(
+                // Add movie class and build the list from movie tiles basically
+                child: ListView.new(
+                  children: [],
+                ),
+              ),
+            ));
   }
 }
