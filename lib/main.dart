@@ -12,12 +12,15 @@ Future main() async {
 }
 
 Future<Map<String, dynamic>> fetchData() async {
-  var apiKeyUrl = dotenv.env['API_KEY_URL'];
-  print(apiKeyUrl);
-  final url = Uri.parse(apiKeyUrl!);
+  // var apiKeyUrl = dotenv.env['API_KEY_URL'];
+  final authToken = dotenv.env['AUTH_TOKEN'];
+  final url = Uri.https('api.themoviedb.org', '/3/discover/movie',
+      {'sort_by': 'popularity.desc'});
   print('Requesting data from: $url');
+  print("And using this auth token for the request, ${authToken}");
   try {
-    final response = await http.get(url);
+    final response =
+        await http.get(url, headers: {'Authorization': 'Bearer ${authToken}'});
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
