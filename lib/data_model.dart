@@ -7,6 +7,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class DataModel extends ChangeNotifier {
   var appData = [];
 
+  DataModel() {
+    fetchData();
+  }
+
   void setData(movieData) {
     appData = movieData;
     notifyListeners();
@@ -26,7 +30,7 @@ class DataModel extends ChangeNotifier {
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         print(data);
-        setData(data);
+        setData(data['results']);
         return data;
       } else {
         print("Error in loading data, status code: ${response.statusCode}");

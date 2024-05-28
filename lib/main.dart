@@ -50,10 +50,23 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 title: Text(widget.title),
               ),
-              body: const Center(
+              body: Center(
                 // Add movie class and build the list from movie tiles basically
-                child: ListView.new(
-                  children: [],
+                child: ListView.separated(
+                  itemCount: value.appData.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      title: Text("${value.appData[index]}"),
+                      onTap: () {
+                        print("List Widget tapped");
+                      },
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const Divider(
+                      color: Colors.white,
+                    );
+                  },
                 ),
               ),
             ));
