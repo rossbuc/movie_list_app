@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   itemCount: value.appData.length,
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
-                      title: Text("${value.appData[index]}"),
+                      title: Text("${value.appData[index]["original_title"]}"),
                       onTap: () {
                         print("List Widget tapped");
                       },
