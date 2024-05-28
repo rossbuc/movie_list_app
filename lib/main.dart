@@ -55,22 +55,28 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: ListView.separated(
                   itemCount: value.appData.length,
                   itemBuilder: (BuildContext context, int index) {
+                    var movie = value.appData[index];
+                    var posterUrl =
+                        'https://image.tmdb.org/t/p/w500${movie['poster_path']}';
+
                     return ListTile(
-                      title: Text("${value.appData[index]["original_title"]}"),
-                      subtitle: Text("${value.appData[index]["release_date"]}"),
+                      leading: Image.network(
+                        posterUrl,
+                        width: 50,
+                        fit: BoxFit.cover,
+                      ),
+                      title: Text("${movie["original_title"]}"),
+                      subtitle: Text("${movie["release_date"]}"),
                       onTap: () {
-                        print("List Widget tapped");
                         Navigator.push(context,
                             MaterialPageRoute(builder: (BuildContext context) {
                           return Scaffold(
                             appBar: AppBar(
-                                title: Text(
-                                    "${value.appData[index]["original_title"]}")),
+                                title: Text("${movie["original_title"]}")),
                             body: Center(
                               child: Hero(
                                 tag: "ListTile-Hero",
-                                child:
-                                    Text("${value.appData[index]["overview"]}"),
+                                child: Text("${movie["overview"]}"),
                               ),
                             ),
                           );
