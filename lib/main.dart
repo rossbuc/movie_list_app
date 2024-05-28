@@ -57,8 +57,24 @@ class _MyHomePageState extends State<MyHomePage> {
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
                       title: Text("${value.appData[index]["original_title"]}"),
+                      subtitle: Text("${value.appData[index]["release_date"]}"),
                       onTap: () {
                         print("List Widget tapped");
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return Scaffold(
+                            appBar: AppBar(
+                                title: Text(
+                                    "${value.appData[index]["original_title"]}")),
+                            body: Center(
+                              child: Hero(
+                                tag: "ListTile-Hero",
+                                child:
+                                    Text("${value.appData[index]["overview"]}"),
+                              ),
+                            ),
+                          );
+                        }));
                       },
                     );
                   },
