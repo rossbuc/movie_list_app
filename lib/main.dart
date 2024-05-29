@@ -23,7 +23,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: MyHomePage(title: "Movie Lister"));
+    final ColorScheme colorScheme = ColorScheme.fromSeed(
+      brightness: MediaQuery.platformBrightnessOf(context),
+      seedColor: Colors.indigo,
+    );
+    return MaterialApp(
+        title: "Movie Lister App demo",
+        theme: ThemeData(
+          colorScheme: colorScheme,
+        ),
+        home: const MyHomePage(title: "Movie Lister"));
   }
 }
 
@@ -39,17 +48,16 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
     return Consumer<DataModel>(
         builder: (context, value, child) => Scaffold(
               appBar: AppBar(
-                leading: IconButton(
-                  icon: const Icon(Icons.menu),
-                  onPressed: () {
-                    displaySideBar();
-                  },
-                ),
+                backgroundColor: colorScheme.surfaceContainerHighest,
+                shadowColor: colorScheme.shadow,
                 title: Text(widget.title),
               ),
+              drawer: const NavigationDrawer(),
               body: Center(
                 // Add movie class and build the list from movie tiles basically
                 child: ListView.separated(
@@ -127,6 +135,70 @@ class MovieDetailPage extends StatelessWidget {
           ),
         )
       ],
+    );
+  }
+}
+
+class NavigationDrawer extends StatelessWidget {
+  const NavigationDrawer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            buildHeader(context),
+            buildItems(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildHeader(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+    );
+  }
+
+  Widget buildItems(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      child: Wrap(
+        runSpacing: 16,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.movie),
+            title: const Text("Genres"),
+            onTap: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const GenresPage()));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.favorite),
+            title: const Text("Favourites"),
+            onTap: () {},
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class GenresPage extends StatelessWidget {
+  const GenresPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Genres"),
+      ),
+      body: const Center(
+        child: Text("Genres"),
+      ),
     );
   }
 }
