@@ -16,11 +16,15 @@ class DataModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<Map<String, dynamic>> fetchData() async {
+  Future<Map<String, dynamic>> fetchData([int? genreId]) async {
     // var apiKeyUrl = dotenv.env['API_KEY_URL'];
     final authToken = dotenv.env['AUTH_TOKEN'];
-    final url = Uri.https('api.themoviedb.org', '/3/discover/movie',
-        {'sort_by': 'popularity.desc'});
+    final queryParams = {
+      'sort_by': 'popularity.desc',
+      if (genreId != null) 'with_genres': genreId.toString(),
+    };
+    final url =
+        Uri.https('api.themoviedb.org', '/3/discover/movie', queryParams);
     print('Requesting data from: $url');
     print("And using this auth token for the request, ${authToken}");
     try {
