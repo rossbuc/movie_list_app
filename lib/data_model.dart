@@ -6,13 +6,20 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DataModel extends ChangeNotifier {
   var appData = [];
+  var genreIds = {};
 
   DataModel() {
     fetchData();
+    fetchGenreIds();
   }
 
   void setData(movieData) {
     appData = movieData;
+    notifyListeners();
+  }
+
+  void setGenreIds(genreIDs) {
+    genreIds = genreIDs;
     notifyListeners();
   }
 
@@ -49,6 +56,32 @@ class DataModel extends ChangeNotifier {
         print('Unexpected error: $e');
       }
       throw Exception("Failed to load data ");
+    }
+  }
+
+  Future<Map<String, int>> fetchGenreIds() async {
+    final authToken = dotenv.env['AUTH_TOKEN'];
+    final url = Uri.https(
+        'api.themoviedb.org', '/3/genre/movie/list', {'language': 'en'});
+
+    print("Fetching genre ids from: $url");
+
+    try {
+      final response = await http
+          .get(url, headers: {"Authorization": 'Bearer ${authToken}'});
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        Map<String, int> genreIds = {};
+        for (var genre in data['genres']) {
+          genreIds[genre['name']] = genre['id'];
+        }
+        return genreIds;
+      } else {
+        throw Exception("Failed to load genres");
+      }
+    } catch (e) {
+      throw Exception("Failed to load genres: $e");
     }
   }
 }
