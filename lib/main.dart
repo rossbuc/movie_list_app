@@ -68,7 +68,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         'https://image.tmdb.org/t/p/w500${movie['poster_path']}';
                     var backDropUrl =
                         'https://image.tmdb.org/t/p/w500${movie['backdrop_path']}';
-
+                    print(
+                        "These are the genreIds in the my app section ${value.genreIds}");
                     return ListTile(
                       leading: Image.network(
                         posterUrl,
@@ -190,17 +191,44 @@ class NavigationDrawer extends StatelessWidget {
   }
 }
 
-class GenresPage extends StatelessWidget {
+class GenresPage extends StatefulWidget {
   const GenresPage({super.key});
 
   @override
+  State<GenresPage> createState() => _GenresPageState();
+}
+
+class _GenresPageState extends State<GenresPage> {
+  @override
+  void initState() {
+    super.initState();
+    final dataModel = Provider.of<DataModel>(context, listen: false);
+    dataModel.fetchGenreIds();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Genres"),
-      ),
-      body: const Center(
-        child: Text("Genres"),
+    return Consumer<DataModel>(
+      builder: (context, value, child) => Scaffold(
+        appBar: AppBar(
+          title: const Text("Genres"),
+        ),
+        body: ListView.builder(
+          itemCount: value.genreIds.length,
+          itemBuilder: (context, index) {
+            final genre = value.genreIds.entries.elementAt(index);
+            print("This is the genresList ${value.genreIds.entries}");
+            return ListTile(
+              title: Text(genre.key),
+              trailing: Text(genre.key.toString()),
+              onTap: () {
+                final genreId = genre.value;
+                Provider.of<DataModel>(context, listen: false)
+                    .fetchData(genreId);
+              },
+            );
+          },
+        ),
       ),
     );
   }

@@ -6,7 +6,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DataModel extends ChangeNotifier {
   var appData = [];
-  var genreIds = {};
+  Map<String, int> genreIds = {};
 
   DataModel() {
     fetchData();
@@ -76,6 +76,7 @@ class DataModel extends ChangeNotifier {
         for (var genre in data['genres']) {
           genreIds[genre['name']] = genre['id'];
         }
+        print("These are the genreIds ${genreIds}");
         return genreIds;
       } else {
         throw Exception("Failed to load genres");
