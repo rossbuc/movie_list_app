@@ -179,7 +179,10 @@ class NavigationDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.favorite),
             title: const Text("Favourites"),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const FavouritesPage()));
+            },
           )
         ],
       ),
@@ -198,6 +201,22 @@ class GenresPage extends StatelessWidget {
       ),
       body: const Center(
         child: Text("Genres"),
+      ),
+    );
+  }
+}
+
+class FavouritesPage extends StatelessWidget {
+  const FavouritesPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Favourites"),
+      ),
+      body: const Center(
+        child: Text("Favourites"),
       ),
     );
   }
