@@ -77,6 +77,7 @@ class DataModel extends ChangeNotifier {
           genreIds[genre['name']] = genre['id'];
         }
         print("These are the genreIds ${genreIds}");
+        setGenreIds(genreIds);
         return genreIds;
       } else {
         throw Exception("Failed to load genres");
