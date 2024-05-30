@@ -213,24 +213,19 @@ class _GenresPageState extends State<GenresPage> {
         appBar: AppBar(
           title: const Text("Genres"),
         ),
-        body: ListView.separated(
+        body: ListView.builder(
+          // scrollDirection: Axis.horizontal,
           itemCount: value.genreIds.length,
           itemBuilder: (context, index) {
             final genre = value.genreIds.entries.elementAt(index);
             print("This is the genresList ${value.genreIds.entries}");
             return ListTile(
               title: Text(genre.key),
-              trailing: Text(genre.key.toString()),
               onTap: () {
                 final genreId = genre.value;
                 Provider.of<DataModel>(context, listen: false)
                     .fetchData(genreId);
               },
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return const Divider(
-              color: Colors.white,
             );
           },
         ),
