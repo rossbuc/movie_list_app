@@ -9,11 +9,13 @@ class MovieTile extends StatefulWidget {
     required this.posterUrl,
     required this.movie,
     required this.backDropUrl,
+    required this.isFavourite,
   });
 
   final String posterUrl;
   final movie;
   final String backDropUrl;
+  final bool isFavourite;
 
   @override
   State<MovieTile> createState() => _MovieTileState();
@@ -25,6 +27,8 @@ class _MovieTileState extends State<MovieTile> {
     void initState() {
       super.initState();
     }
+
+    ;
 
     return ListTile(
       leading: Image.network(
@@ -46,7 +50,9 @@ class _MovieTileState extends State<MovieTile> {
             final dataModel = Provider.of<DataModel>(context, listen: false);
             dataModel.addFavourite(widget.movie);
           },
-          child: const Icon(Icons.favorite_border_outlined)),
+          child: Icon(widget.isFavourite
+              ? Icons.favorite
+              : Icons.favorite_border_outlined)),
     );
   }
 }

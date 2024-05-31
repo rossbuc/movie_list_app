@@ -39,10 +39,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         'https://image.tmdb.org/t/p/w500${movie['backdrop_path']}';
                     print(
                         "These are the genreIds in the my app section ${value.genreIds}");
+                    var isFavourite = value.favourites.contains(movie);
                     return MovieTile(
-                        posterUrl: posterUrl,
-                        movie: movie,
-                        backDropUrl: backDropUrl);
+                      posterUrl: posterUrl,
+                      movie: movie,
+                      backDropUrl: backDropUrl,
+                      isFavourite: isFavourite,
+                    );
                   },
                   separatorBuilder: (BuildContext context, int index) {
                     return const Divider(
