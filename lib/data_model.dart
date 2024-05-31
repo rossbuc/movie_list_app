@@ -7,6 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class DataModel extends ChangeNotifier {
   var appData = [];
   Map<String, int> genreIds = {};
+  var favourites = [];
 
   DataModel() {
     fetchData();
@@ -20,6 +21,11 @@ class DataModel extends ChangeNotifier {
 
   void setGenreIds(genreIDs) {
     genreIds = genreIDs;
+    notifyListeners();
+  }
+
+  void addFavourite(movie) {
+    favourites.add(movie);
     notifyListeners();
   }
 
